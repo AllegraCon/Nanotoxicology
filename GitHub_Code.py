@@ -298,8 +298,6 @@ while cc<len(cols): ###for each target defined by cols
         from sklearn.metrics import plot_confusion_matrix
         import matplotlib.pyplot as pl
 
-    # Plot non-normalized confusion matrix
-
     
         A[rs]=np.sqrt(mean_squared_error(yv, y_pred)) #rmse
         tt=shap.TreeExplainer(gbm).shap_values(Xt)
@@ -316,7 +314,7 @@ while cc<len(cols): ###for each target defined by cols
         R2s[rs]=r2_score(yv, y_pred);
         coef_sp_s[rs], p_sp_s[rs] = spearmanr(yv, y_pred)
         
-        ##Rimuovo i NaN   
+        ##delete nan
         nan_array1 = np.isnan(p_sp_s)
         not_nan_array1 = ~ nan_array1
         array2 = (p_sp_s[not_nan_array1])
@@ -325,7 +323,7 @@ while cc<len(cols): ###for each target defined by cols
         not_nan_array2 = ~ nan_array2
         array3 = (coef_sp_s[not_nan_array2])
     
-    ###memorizzo gli iperparametri
+  
         papa[rs]=params;
         
         

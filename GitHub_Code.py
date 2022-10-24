@@ -55,7 +55,6 @@ le = preprocessing.LabelEncoder()
 ## remove lines with missing data
 DATALOAD.reset_index(inplace = True, drop = True) 
 
-##target varia dalla 14 alla 168 colonna
 
 # select columns other than target
 cols = [col for col in DATALOAD.columns]
@@ -73,15 +72,9 @@ while ii<col_pred:
 
 features_in_pca=np.empty((2, 7,len(cols))); ##two is the number of Principal components, 6 n. of features on which PCA is calculated
 
-#setting variables as categotical
-data2[cols[6]] = data2[cols[6]].astype('category')
-data2[cols[7]] = data2[cols[7]].astype('category')
-data2[cols[11]] = data2[cols[11]].astype('category')
-data2[cols[12]] = data2[cols[12]].astype('category')
-data2[cols[13]] = data2[cols[13]].astype('category')
-data2[cols[15]] = data2[cols[15]].astype('category') 
-data2[cols[17]] = data2[cols[17]].astype('category')
-data2[cols[18]] = data2[cols[18]].astype('category') 
+#setting variables as categotical as for example
+#data2[cols[6]] = data2[cols[6]].astype('category')
+
   
 
        #################### ****************** OneHotEncoder - multiclass variables
@@ -90,7 +83,7 @@ from sklearn.preprocessing import OneHotEncoder
 enc = OneHotEncoder(handle_unknown='ignore')
 
 
-#material
+#repeat lines from 86 to 94 below for all categorical variables
 variable = pd.concat([data2[cols[6]],data2[cols[6]]], axis = 1) ;
 variable.columns = ['Names', cols[6]]
         
@@ -100,79 +93,18 @@ df0= dum_df.drop('Names', 1)
         
 del variable, enc_df, dum_df
 
-##period
-variable = pd.concat([data2[cols[7]],data2[cols[7]]], axis = 1) ;
-variable.columns = ['Names', cols[7]]
-        
-enc_df = pd.DataFrame(enc.fit_transform(variable[[cols[7]]]).toarray())
-dum_df = pd.get_dummies(variable, columns=[cols[7]], prefix=[cols[7]] )
-df1= dum_df.drop('Names', 1)
-        
-del variable, enc_df, dum_df
+##Concatenate all variables (old+all variables came out fromthe OneHotEncoder) as for example for 6 categorical variables
 
 
-#####shape
-variable = pd.concat([data2[cols[12]],data2[cols[12]]], axis = 1) ;
-variable.columns = ['Names', cols[12]]
-        
-enc_df = pd.DataFrame(enc.fit_transform(variable[[cols[12]]]).toarray())
-dum_df = pd.get_dummies(variable, columns=[cols[12]], prefix=[cols[12]] )
-df2= dum_df.drop('Names', 1)
-        
-del variable, enc_df, dum_df
-
-#####assay mod
-variable = pd.concat([data2[cols[13]],data2[cols[13]]], axis = 1) ;
-variable.columns = ['Names', cols[13]]
-        
-enc_df = pd.DataFrame(enc.fit_transform(variable[[cols[13]]]).toarray())
-dum_df = pd.get_dummies(variable, columns=[cols[13]], prefix=[cols[13]] )
-df3= dum_df.drop('Names', 1)
-        
-del variable, enc_df, dum_df
-
-#####cell_type
-variable = pd.concat([data2[cols[15]],data2[cols[15]]], axis = 1) ;
-variable.columns = ['Names', cols[15]]
-        
-enc_df = pd.DataFrame(enc.fit_transform(variable[[cols[15]]]).toarray())
-dum_df = pd.get_dummies(variable, columns=[cols[15]], prefix=[cols[15]] )
-df4= dum_df.drop('Names', 1)
-        
-del variable, enc_df, dum_df
-
-## 'Dispersion_protocol'
-variable = pd.concat([data2[cols[17]],data2[cols[17]]], axis = 1) ;
-variable.columns = ['Names', cols[17]]
-        
-enc_df = pd.DataFrame(enc.fit_transform(variable[[cols[17]]]).toarray())
-dum_df = pd.get_dummies(variable, columns=[cols[17]], prefix=[cols[17]] )
-df5= dum_df.drop('Names', 1)
-        
-del variable, enc_df, dum_df
-
-## 'Dispersion_protocol_Energy'
-
-variable = pd.concat([data2[cols[18]],data2[cols[18]]], axis = 1) ;
-variable.columns = ['Names', cols[18]]
-        
-enc_df = pd.DataFrame(enc.fit_transform(variable[[cols[18]]]).toarray())
-dum_df = pd.get_dummies(variable, columns=[cols[18]], prefix=[cols[18]] )
-df6= dum_df.drop('Names', 1)
-        
-del variable, enc_df, dum_df
+#data_all2= pd.concat([data2[cols[0]],data2[cols[1]],data2[cols[2]],data2[cols[3]],data2[cols[4]],data2[cols[5]],data2[cols[6]],
+#                  data2[cols[7]], data2[cols[8]], data2[cols[9]], data2[cols[10]], data2[cols[11]],
+#                  data2[cols[14]], data2[cols[16]],data2[cols[19]], data2[cols[20]], data2[cols[21]], data2[cols[22]],data2[cols[23]],
+#                  data2[cols[24]], 
+#                  df0, df1,df2,df3,df4,df5,df6],axis=1)
 
 
 
-data_all2= pd.concat([data2[cols[0]],data2[cols[1]],data2[cols[2]],data2[cols[3]],data2[cols[4]],data2[cols[5]],data2[cols[6]],
-                  data2[cols[7]], data2[cols[8]], data2[cols[9]], data2[cols[10]], data2[cols[11]],
-                  data2[cols[14]], data2[cols[16]],data2[cols[19]], data2[cols[20]], data2[cols[21]], data2[cols[22]],data2[cols[23]],
-                  data2[cols[24]], 
-                  df0, df1,df2,df3,df4,df5,df6],axis=1)
-
-
-
-del df0, df1,df2,df3,df4,df5,df6
+del df0
 cols2 = [col for col in data_all2.columns]
 
 
@@ -323,10 +255,9 @@ while cc<len(cols): ###for each target defined by cols
         cv_params = {'max_depth': [1,2,3,4,5,6], 'min_child_weight': [1,2,3,4],'learning_rate': [0.05, 0.1, 0.15, 0.2, 0.25, 0.3]}    # parameters to be tries in the grid search
         fix_params = {'n_estimators': 100, 'objective': 'reg:squarederror'}   #other parameters, fixed for the moment 
       
-        
-        clf = xgb.XGBClassifier(
-            tree_method="gpu_hist", enable_categorical=True, use_label_encoder=True, 
-            )
+       
+        clf = xgb.XGBRegressor(
+            tree_method="gpu_hist", enable_categorical=True )
         
         csv = GridSearchCV(clf, cv_params, scoring = 'neg_root_mean_squared_error', cv = 5)
         csv.fit(Xt, yt) #runs the search
@@ -337,14 +268,6 @@ while cc<len(cols): ###for each target defined by cols
     
     
         #Now we train our final model on the entire training set, and evaluate it on the still unused testing set:
-
-        xgdmat_train = xgb.DMatrix(Xt, yt)
-        xgb_final = xgb.train(params, xgdmat_train, num_boost_round = 100)
-        xgdmat_test = xgb.DMatrix(Xv, yv)
-  
-
-
-
 
         #gbm = xgb.XGBRegressor(params)
         gbm=xgb.XGBRegressor(**params, objective='reg:squarederror', eval_metric='rmse')
